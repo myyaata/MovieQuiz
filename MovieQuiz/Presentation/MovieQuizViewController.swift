@@ -3,15 +3,17 @@ import UIKit
 final class MovieQuizViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
-        super.viewDidLoad()
         let currentQuestion = questions[currentQuestionIndex]
         let viewModel = convert(model: currentQuestion)
         show(quiz: viewModel)
+        super.viewDidLoad()
     }
     
     private var currentQuestionIndex = 0
         
     private var correctAnswers = 0
+    
+    private var isWaitingForNextQuestion = false
     
     private var questions: [QuizQuestion] = [
         QuizQuestion(
@@ -56,9 +58,11 @@ final class MovieQuizViewController: UIViewController {
                     correctAnswer: false)
     ]
     
-    // метод конвертации, который принимает моковый вопрос и возвращает вью модель для экрана вопроса
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
-        let quizStepViewModel = QuizStepViewModel(image: UIImage(named: model.image) ?? UIImage(), question: model.text, questionNumber: "\(currentQuestionIndex+1)/\(questions.count)")
+        let quizStepViewModel = QuizStepViewModel(
+            image: UIImage(named: model.image) ?? UIImage(),
+            question: model.text,
+            questionNumber: "\(currentQuestionIndex+1)/\(questions.count)")
         return quizStepViewModel
     }
     
@@ -70,6 +74,8 @@ final class MovieQuizViewController: UIViewController {
     }
     
     private func showAnswerResult(isCorrect: Bool) {
+        guard !isWaitingForNextQuestion else { return }
+        isWaitingForNextQuestion = true
         if isCorrect {
             correctAnswers += 1
         }
@@ -78,6 +84,7 @@ final class MovieQuizViewController: UIViewController {
         imageView.layer.cornerRadius = 20
         imageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.isWaitingForNextQuestion = false
             self.showNextQuestionOrResults()
         }
     }
@@ -86,7 +93,10 @@ final class MovieQuizViewController: UIViewController {
         if currentQuestionIndex == questions.count - 1 {
             //результат квиза
             let text = "Ваш результат: \(correctAnswers)/\(questions.count)"
-            let viewModel = QuizResultViewModel(title: "Этот раунд окончен!", text: text, buttonText: "Сыграть еще раз")
+            let viewModel = QuizResultViewModel(
+                title: "Этот раунд окончен!",
+                text: text,
+                buttonText: "Сыграть еще раз")
             show(quiz: viewModel)
         } else {
             currentQuestionIndex += 1
@@ -103,7 +113,8 @@ final class MovieQuizViewController: UIViewController {
                                       preferredStyle: .alert)
         
         let action = UIAlertAction(title: result.buttonText,
-                                   style: .default) { _ in
+                                   style: .default) { [weak self] _ in
+            guard let self else { return }
             self.currentQuestionIndex = 0
             self.correctAnswers = 0
             
