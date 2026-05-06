@@ -111,20 +111,28 @@
                                     </stackView>
                                 </subviews>
                             </stackView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="tv9-dg-lOp">
+                                <rect key="frame" x="197" y="438" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
+                            <constraint firstItem="tv9-dg-lOp" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="6Ls-tL-ECP"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="1Wz-Tr-JXv" secondAttribute="trailing" constant="20" id="CxR-uZ-sKy"/>
                             <constraint firstItem="1Wz-Tr-JXv" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="FWo-35-Nes"/>
+                            <constraint firstItem="tv9-dg-lOp" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="ggy-lN-ztt"/>
                             <constraint firstItem="CV9-rW-tXg" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="opK-UZ-Dah"/>
                             <constraint firstItem="1Wz-Tr-JXv" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="ou0-6h-uFP"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="tv9-dg-lOp" id="LcK-wN-qyQ"/>
                         <outlet property="counterLabel" destination="tsX-x7-QZF" id="p47-KS-0LM"/>
                         <outlet property="imageView" destination="r8W-Ae-W7F" id="Z2O-1N-wYb"/>
+                        <outlet property="noButton" destination="Z3v-WL-bfL" id="Ahm-8b-BtT"/>
                         <outlet property="textLabel" destination="WMr-Sb-p32" id="sjP-gb-HYd"/>
+                        <outlet property="yesButton" destination="hyT-09-erp" id="4cO-6R-c4k"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
