@@ -35,6 +35,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         currentQuestion = question
         let viewModel = convert(model: question)
         DispatchQueue.main.async { [weak self] in
+            self?.hideLoadingIndicator()
             self?.show(quiz: viewModel)
             self?.enableButtons(true)
         }
