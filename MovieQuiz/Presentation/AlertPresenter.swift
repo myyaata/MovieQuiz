@@ -6,6 +6,14 @@ final class AlertPresenter {
         let alert = UIAlertController(title: model.title,
                                       message: model.message,
                                       preferredStyle: .alert)
+        
+        alert.view.accessibilityIdentifier = "Quiz Alert"
+        if model.title == "Ошибка" {
+            alert.view.accessibilityIdentifier = "Error Alert"
+        } else if model.title == "Этот раунд окончен!" {
+            alert.view.accessibilityIdentifier = "Result Alert"
+        }
+
         let action = UIAlertAction(title: model.buttonText,
                                    style: .default) { _ in
             model.completion()
