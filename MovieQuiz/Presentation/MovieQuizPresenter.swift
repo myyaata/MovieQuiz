@@ -8,7 +8,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate{
     private var currentQuestionIndex = 0
     private let questionsAmount: Int = 10
     
-    private let statisticService: StatisticServiceProtocol!
+    private let statisticService: StatisticServiceProtocol?
     private var questionFactory: QuestionFactoryProtocol?
     private weak var viewController: MovieQuizViewControllerProtocol?
 
@@ -41,11 +41,10 @@ final class MovieQuizPresenter: QuestionFactoryDelegate{
     }
     
     func convert(model: QuizQuestion) -> QuizStepViewModel {
-        let quizStepViewModel = QuizStepViewModel(
+        QuizStepViewModel(
             image: model.image,
             question: model.text,
             questionNumber: "\(currentQuestionIndex+1)/\(questionsAmount)")
-        return quizStepViewModel
     }
     
     func isLastQuestion() -> Bool {
@@ -63,9 +62,12 @@ final class MovieQuizPresenter: QuestionFactoryDelegate{
     }
     
     func showNextQuestionOrResults() {
-        if self.isLastQuestion() {
+        if isLastQuestion() {
             //результат квиза
+            guard let statisticService else { return }
+            
             statisticService.store(correct: correctAnswers, total: self.questionsAmount)
+            
             let gamesCount = statisticService.gamesCount
             let bestGame = statisticService.bestGame
             let averageScore = statisticService.averageScore
@@ -83,13 +85,13 @@ final class MovieQuizPresenter: QuestionFactoryDelegate{
     }
     
     func showAnswerResult(isCorrect: Bool) {
-        guard isWaitingForNextQuestion != true else { return }
+        guard !isWaitingForNextQuestion else { return }
         isWaitingForNextQuestion = true
         viewController?.enableButtons(false)
         didAnswer(isCorrectAnswer: isCorrect)
         viewController?.highlightImageBorder(isCorrectAnswer: isCorrect)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             self.isWaitingForNextQuestion = false
             self.showNextQuestionOrResults()
         }
@@ -106,9 +108,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate{
     func didAnswer(isCorrectAnswer: Bool) {
         if isCorrectAnswer {
             correctAnswers += 1
-        } else {
-            return
-        }
+        } 
     }
     
     private func didAnswer(isYes: Bool) {

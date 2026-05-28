@@ -7,11 +7,9 @@ final class AlertPresenter {
                                       message: model.message,
                                       preferredStyle: .alert)
         
-        alert.view.accessibilityIdentifier = "Quiz Alert"
-        if model.title == "Ошибка" {
-            alert.view.accessibilityIdentifier = "Error Alert"
-        } else if model.title == "Этот раунд окончен!" {
-            alert.view.accessibilityIdentifier = "Result Alert"
+        switch model.type {
+        case .result: alert.view.accessibilityIdentifier = "Result Alert"
+        case .error: alert.view.accessibilityIdentifier = "Error Alert"
         }
 
         let action = UIAlertAction(title: model.buttonText,

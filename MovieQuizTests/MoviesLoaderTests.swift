@@ -40,7 +40,7 @@ struct StubNetworkClient: NetworkRouting {
                 ]
               }
             """.data(using: .utf8) ?? Data()
-        }
+    }
     
     func fetch(url: URL, handler: @escaping (Result<Data, any Error>) -> Void) {
         if emulateError {
@@ -51,7 +51,7 @@ struct StubNetworkClient: NetworkRouting {
     }
 }
 
-class MoviesLoaderTests: XCTestCase {
+final class MoviesLoaderTests: XCTestCase {
     
     func testSuccessLoading() throws {
         let stubNetworkClient = StubNetworkClient(emulateError: false)

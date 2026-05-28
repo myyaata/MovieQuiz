@@ -1,12 +1,11 @@
 import UIKit
-import Foundation
 
 final class MovieQuizViewController: UIViewController, MovieQuizViewControllerProtocol {
 
     // MARK: - Properties
     private var alertPresenter = AlertPresenter()
     
-    private var presenter: MovieQuizPresenter!
+    private var presenter: MovieQuizPresenter?
         
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -24,9 +23,9 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     }
     
     func show(quiz result: QuizResultViewModel) {
-        let model = AlertModel(title: result.title, message: result.text, buttonText: result.buttonText) { [weak self] in
+        let model = AlertModel(type: .result, title: result.title, message: result.text, buttonText: result.buttonText) { [weak self] in
             guard let self else { return }
-            self.presenter.restartGame()
+            self.presenter?.restartGame()
         }
         alertPresenter.show(on: self, model: model)
     }
@@ -42,9 +41,9 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     
     func showNetworkError(message: String) {
         hideLoadingIndicator()
-        let model = AlertModel(title: "Ошибка", message: message, buttonText: "Попробовать еще раз") { [weak self] in
+        let model = AlertModel(type: .error, title: "Ошибка", message: message, buttonText: "Попробовать еще раз") { [weak self] in
             guard let self else { return }
-            self.presenter.restartGame()
+            self.presenter?.restartGame()
         }
         alertPresenter.show(on: self, model: model)
     }
@@ -76,10 +75,10 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     
     // MARK: - Actions
     @IBAction private func noButtonClicked(_ sender: UIButton) {
-        presenter.noButtonClicked()
+        presenter?.noButtonClicked()
     }
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
-        presenter.yesButtonClicked()
+        presenter?.yesButtonClicked()
     }
 }
